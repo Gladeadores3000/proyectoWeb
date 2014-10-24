@@ -1,27 +1,33 @@
 <?php
-                        include 'php/opGenericas.php';
-                             // Realizar una consulta MySQL
-                            $resultado = consultarTodos("contenido", 0, 3);
-                            
-                            while ($line = mysqli_fetch_assoc($resultado)) {
-                                printf( "
-                                   <div class=col-md-4 >
-                                        <div class=gallery-item >
-                                            <div class=gallery-thumb>
-                                                <img src=$line[url] alt=$line[titulo]>
-                                                <div class=overlay-p>
-                                                    <a href=#portfolio class=login-window>
-                                                        <i class='fa fa-arrows-alt fa-2x'></i>
-                                                    </a>
-                                                </div>
-                                            </div> 
-                                            <h3 class=gallery-title><a href=#>$line[titulo]</a></h3>
-                                        </div> 
-                                    </div>   
-                                     <div id=portfolio class=login-popup>
-                                    <a href=# class=close><img src=images/close_pop.png class=btn_close title=Close Window alt=Close /></a>        
-                                        <img src=$line[url]>
-                                    </div>
-                                ");
-                            }
-                    ?>
+    include 'usuario.php';
+    /*
+    .------------------------------------------.
+    |       ACTUALIZACION DE USUARIO           |
+    |__________________________________________|*/
+    foreach ($_POST as $clave => $valor)
+    {
+        ${$clave} = $valor;
+    }
+
+    if ( $email != $email2 || $password != $password2 || $sex == 0)
+    {
+	   echo "Correos o Contraseñas No coinciden";
+    }
+    else
+    {
+        //Todo parece correcto procedemos con la insercción
+
+        /*`ci`, `nombre`, `apellido`, `correo`, `contrasena`, `telefono`, `sexo`, `nacimiento`, `foto`, `rol`, | `ultimo_acceso`,`altualizado`, `primer_acceso`*/
+        if (!actualizar( $id, $id, $name, $lastname, $email, $password, $telephone, $sex, $datebith, $photo, $role, $ultimo_acceso) )
+        {
+                echo "Error: No se realizó la ACTUALIZACION del usuario";
+        }
+        else
+        {
+                echo "Se ACTUALIZO Correctamente";
+                echo "Usuario: $name ";
+                echo "<br/> Contraseña: $password ";
+                echo "<br/> Email: $email";
+        }
+    }
+?>
