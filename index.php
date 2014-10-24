@@ -1,33 +1,56 @@
 <?php
-    include 'usuario.php';
-    /*
+ /*
     .------------------------------------------.
-    |       ACTUALIZACION DE USUARIO           |
+    |     OPERACIONES PARA                     |
+    |                 LA ENTIDAD USUARIO       |
     |__________________________________________|*/
-    foreach ($_POST as $clave => $valor)
-    {
-        ${$clave} = $valor;
-    }
 
-    if ( $email != $email2 || $password != $password2 || $sex == 0)
-    {
-	   echo "Correos o Contraseñas No coinciden";
-    }
-    else
-    {
-        //Todo parece correcto procedemos con la insercción
 
-        /*`ci`, `nombre`, `apellido`, `correo`, `contrasena`, `telefono`, `sexo`, `nacimiento`, `foto`, `rol`, | `ultimo_acceso`,`altualizado`, `primer_acceso`*/
-        if (!actualizar( $id, $id, $name, $lastname, $email, $password, $telephone, $sex, $datebith, $photo, $role, $ultimo_acceso) )
-        {
-                echo "Error: No se realizó la ACTUALIZACION del usuario";
-        }
+    include 'opGenericas.php';
+
+	
+     /*
+    .------------------------------------------.
+    |                  INSERTAR                |
+    |__________________________________________|*/
+    /*`ci`, `nombre`, `apellido`, `correo`, `contrasena`, `telefono`, `sexo`, `nacimiento`, `foto`, `rol`, |`ultimo_acceso`, `altualizado`, `primer_acceso`*/
+	function insertar( $ci, $nombre, $apellido, $correo, $contraseña, $telefono, $sexo, $nacimiento, $foto, $rol) {
+        
+        if ( !existe("usuario","ci",$ci) && !existe("usuario", "correo", $correo)) {
+            $query = "INSERT INTO usuario VALUES ('"
+                                .$ci."','".$nombre."','".$apellido."','".$correo."','".$contraseña."','"
+                                .$telefono."','".$sexo."','".$nacimiento."','".$foto."',".$rol.",'0000-00-00' ,CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)";
+                                
+            $result = ejecutar($query);    //       mysqli_query($link, $query) or die (mysql_error());
+
+            return ( $result );
+
+        }   
         else
         {
-                echo "Se ACTUALIZO Correctamente";
-                echo "Usuario: $name ";
-                echo "<br/> Contraseña: $password ";
-                echo "<br/> Email: $email";
+            echo "La cedula o la cuenta de correo ya están en uso";
+            return false;
         }
+	}
+	/*
+    .------------------------------------------.
+    |                ACTUALIZAR                |
+    |__________________________________________|*/
+    function actualizar($clave, $ci, $nombre, $apellido, $correo, $contraseña, $telefono, $sexo, $nacimiento, $foto, $rol, $ultimo_acceso) {
+            
+            $query = "UPDATE usuario SET ci= '".$ci
+            ."',nombre ='".$nombre."',apellido ='".$apellido
+            ."',correo ='".$correp."',contrasena ='".$contraseña
+            ."',telefono ='".$telefono."',sexo ='".$sexo
+            ."',nacimiento ='".$nacimiento."',foto ='".$foto
+            ."',rol ='".$rol.", ultimo_acceso =".$ultimo_acceso
+            ."',actualizado = CURRENT_TIMESTAMP".
+            ." WHERE ci = '".$clave."'";
+            
+            $result = ejecutar($query);//mysqli_query($link, $query) or die (mysql_error());
+
+            return mysqli_affected_rows($result);
+
     }
+    
 ?>
