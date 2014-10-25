@@ -1,26 +1,69 @@
 <?php
- /*  .------------------------------------------.
-    |           INSERCION DE NOTIICIA           |
+	
+ /*
+    .------------------------------------------.
+    |     OPERACIONES PARA                     |
+    |               LA ENTIDAD NOTICIA  	   |
     |__________________________________________|*/
-    include 'noticiaOp.php';
-     
-    foreach ($_POST as $clave => $valor)
-    {
-        ${$clave} = $valor;
+
+    include 'opGenericas.php';
+/*
+    .------------------------------------------.
+    |                  INSERTAR                |
+    |__________________________________________|*/
+    function insertarNoticia($titulo, $descripcion,$autor){
+
+            $query = "INSERT INTO noticia VALUES (CURRENT_TIMESTAMP,'
+                                ".$titulo."','".$descripcion."',CURRENT_TIMESTAMP,'".$autor."')";
+                                
+            $result = ejecutar($query);   
+
+            return ( $result );
+	}
+
+    /*
+    .------------------------------------------.
+    |    Filtrar  por nombre y usuario         |
+    |__________________________________________|*/
+    function filtrarNoticia($titulo, $autor){
+            $query = "select * from noticia WHERE titulo = '".$titulo."', autor = ".$autor."";
+            return (ejecutar($query));
+            
     }
-    $author = 12345678;
-    if(!insertarNoticia($titulo, $descripcion, $author))
-    {
-        echo "Erro no se creo la noticia";
-    } 
-    else
-    {       
-       
-    }    
-    
-    $self = $_SERVER['PHP_SELF']; //Obtenemos la página en la que nos encontramos
-    //header("refresh:0; url=$self"); //Refrescamos cada xxx segundos
-    header('menu.php?clase=noticia&rol=1&tabla=noticia#noticia');
-    
+
+	/*
+    .------------------------------------------.
+    |                  Listar 				   |
+    |									       |
+    |__________________________________________|*/
+
+    function listarNoticia($cantidad){
+
+    	$query = "select * from noticia LIMIT ".$cantidad."";
+
+    	return (ejecutar($query));
+    }
+
+		/*
+    .------------------------------------------.
+    |                  actualizar              |
+    |__________________________________________|*/
+
+	function actualizarNoticia($titulo,$descripcion,$creacion){
+
+		$query = "UPDATE noticia SET titulo= '".$titulo
+            ."', descripcion = '".$descripcion."',modidficacion= CURRENT_TIMESTAMP
+             WHERE creacion = '".$creacion."'";
+
+        $result = ejecutar($query);
+
+        return ($result);
+	}
+
+	/*
+    .------------------------------------------.
+    |                 Eliminar 				   |
+    |		opGenericas.eliminar_objeto()      |
+    |__________________________________________|*/
 
 ?>
