@@ -1,56 +1,20 @@
-<?php
- /*
-    .------------------------------------------.
-    |     OPERACIONES PARA                     |
-    |                 LA ENTIDAD USUARIO       |
-    |__________________________________________|*/
-
-
-    include 'opGenericas.php';
-
-	
-     /*
-    .------------------------------------------.
-    |                  INSERTAR                |
-    |__________________________________________|*/
-    /*`ci`, `nombre`, `apellido`, `correo`, `contrasena`, `telefono`, `sexo`, `nacimiento`, `foto`, `rol`, |`ultimo_acceso`, `altualizado`, `primer_acceso`*/
-	function insertar( $ci, $nombre, $apellido, $correo, $contraseña, $telefono, $sexo, $nacimiento, $foto, $rol) {
-        
-        if ( !existe("usuario","ci",$ci) && !existe("usuario", "correo", $correo)) {
-            $query = "INSERT INTO usuario VALUES ('"
-                                .$ci."','".$nombre."','".$apellido."','".$correo."','".$contraseña."','"
-                                .$telefono."','".$sexo."','".$nacimiento."','".$foto."',".$rol.",'0000-00-00' ,CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)";
-                                
-            $result = ejecutar($query);    //       mysqli_query($link, $query) or die (mysql_error());
-
-            return ( $result );
-
-        }   
-        else
-        {
-            echo "La cedula o la cuenta de correo ya están en uso";
-            return false;
-        }
-	}
-	/*
-    .------------------------------------------.
-    |                ACTUALIZAR                |
-    |__________________________________________|*/
-    function actualizar($clave, $ci, $nombre, $apellido, $correo, $contraseña, $telefono, $sexo, $nacimiento, $foto, $rol, $ultimo_acceso) {
-            
-            $query = "UPDATE usuario SET ci= '".$ci
-            ."',nombre ='".$nombre."',apellido ='".$apellido
-            ."',correo ='".$correp."',contrasena ='".$contraseña
-            ."',telefono ='".$telefono."',sexo ='".$sexo
-            ."',nacimiento ='".$nacimiento."',foto ='".$foto
-            ."',rol ='".$rol.", ultimo_acceso =".$ultimo_acceso
-            ."',actualizado = CURRENT_TIMESTAMP".
-            ." WHERE ci = '".$clave."'";
-            
-            $result = ejecutar($query);//mysqli_query($link, $query) or die (mysql_error());
-
-            return mysqli_affected_rows($result);
-
-    }
-    
-?>
+case 'noticias':
+                printf('
+                    <div id="up-noticias-box" class="login-popup"> 
+                        <a href="#" class="close"><img src="images/close_pop.png" class="btn_close" title="Close Window" alt="Close" /></a> 
+                        <form method="post" class="signin" action="php/insertarNoticia.php" align="center">
+                            <fieldset class="textbox" >
+                                Noticia
+                                <label class="username">
+                                    <input id="titulo" name="titulo" value="" type="text" autocomplete="on" placeholder="ingrese el Titulo">
+                                </label>
+                                <label class="username">
+                                   <textarea name="descripcion" rows="5" cols="30" placeholder="escribe aqui tu noticia"></textarea>
+                                </label>
+                                    
+                                <button class="submit button" type="submit">Publicar Noticia</button>                  
+                            </fieldset>
+                        </form>
+                </div>
+                ');
+                break;
