@@ -1,69 +1,43 @@
-<?php
-	
- /*
-    .------------------------------------------.
-    |     OPERACIONES PARA                     |
-    |               LA ENTIDAD NOTICIA  	   |
-    |__________________________________________|*/
+ // Conectando, seleccionando la base de datos
+    $link = mysql_connect('localhost', 'root', '')
+        or die('No se pudo conectar: ' . mysql_error());
+    echo 'Connected successfully<br>';
+    mysql_select_db('sonsalsero') or die('No se pudo seleccionar la base de datos');
 
-    include 'opGenericas.php';
-/*
-    .------------------------------------------.
-    |                  INSERTAR                |
-    |__________________________________________|*/
-    function insertarNoticia($titulo, $descripcion,$autor){
+     $name = $_POST['image_name'];
+     $tipo = $_FILES['archivo']['type'];
+     $url = 'images/'.$_FILES['archivo']['name'];
+     
+     $url = str_replace(' ', '', $url);
 
-            $query = "INSERT INTO noticia VALUES (CURRENT_TIMESTAMP,'
-                                ".$titulo."','".$descripcion."',CURRENT_TIMESTAMP,'".$autor."')";
-                                
-            $result = ejecutar($query);   
+     echo $name." ".$tipo." ".$url."<br>";
+      $query = "INSERT INTO contenido VALUES ('".$name."',  '".$tipo."',  '".$url."', CURRENT_TIMESTAMP , CURRENT_TIMESTAMP ,  12345678)";
+     $result = mysql_query($query) or die('Consulta fallida: ' . mysql_error());
+    echo "Nombre: ".$_FILES['archivo']['name']."<br>";
+        echo "Tipo: ".$_FILES['archivo']['type']."<br>";
+        echo "Tamaño: ".($_FILES['archivo']["size"]/1024)."kb<br>";
+        echo "Carpeta: ".$_FILES['archivo']['tmp_name'] ;
+    // echo $result;
+    if($_FILES['archivo']["error"]>0)
+    {
+        echo "Error: ". $_FILES['archivo']["error"]."<br>";
+    } 
+    else
+    {       
+       /* echo "Nombre: ".$_FILES['archivo']['name']."<br>";
+        echo "Tipo: ".$_FILES['archivo']['type']."<br>";
+        echo "Tamaño: ".($_FILES['archivo']["size"]/1024)."kb<br>";
+        echo "Carpeta: ".$_FILES['archivo']['tmp_name'] ;*/
+    }    
+    move_uploaded_file($_FILES['archivo']['tmp_name'], 
+        "images/".$_FILES['archivo']['name']);
+    rename ("images/".$_FILES['archivo']['name'],"images/$url");
+    // Liberar resultados
+    //mysql_free_result($result);
+        // Cerrar la conexión
+    mysql_close($link);
 
-            return ( $result );
-	}
 
-    /*
-    .------------------------------------------.
-    |    Filtrar  por nombre y usuario         |
-    |__________________________________________|*/
-    function filtrarNoticia($titulo, $autor){
-            $query = "select * from noticia WHERE titulo = '".$titulo."', autor = ".$autor."";
-            return (ejecutar($query));
-            
-    }
-
-	/*
-    .------------------------------------------.
-    |                  Listar 				   |
-    |									       |
-    |__________________________________________|*/
-
-    function listarNoticia($cantidad){
-
-    	$query = "select * from noticia LIMIT ".$cantidad."";
-
-    	return (ejecutar($query));
-    }
-
-		/*
-    .------------------------------------------.
-    |                  actualizar              |
-    |__________________________________________|*/
-
-	function actualizarNoticia($titulo,$descripcion,$creacion){
-
-		$query = "UPDATE noticia SET titulo= '".$titulo
-            ."', descripcion = '".$descripcion."',modidficacion= CURRENT_TIMESTAMP
-             WHERE creacion = '".$creacion."'";
-
-        $result = ejecutar($query);
-
-        return ($result);
-	}
-
-	/*
-    .------------------------------------------.
-    |                 Eliminar 				   |
-    |		opGenericas.eliminar_objeto()      |
-    |__________________________________________|*/
-
-?>
+    $self = $_SERVER['PHP_SELF']; //Obtenemos la página en la que nos encontramos
+    header("refresh:0; url=$self"); //Refrescamos cada xxx segundos
+    header('Location: menu.php?clase=galeria&rol=1&tabla=contenido#galeria');
